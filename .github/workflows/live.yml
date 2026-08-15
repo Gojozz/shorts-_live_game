@@ -1,0 +1,201 @@
+name: Racing Live YouTube
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    # 19:00 WIB = 12:00 UTC
+    - cron: "0 12 * * *"
+
+jobs:
+  stream:
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            xvfb \
+            chromium-browser \
+            ffmpeg \
+            python3 \
+            pulseaudio \
+            pulseaudio-utils \
+            espeak-ng
+
+          python3 -m pip install --break-system-packages piper-tts
+          python3 -m piper.download_voices en_US-amy-medium
+
+          npm install
+
+      - name: Start Xvfb
+        run: |
+          Xvfb :99 \
+            -screen 0 1280x720x24 \
+            -ac \
+            +extension GLX \
+            +render \
+            -noreset \
+            >/tmp/xvfb.log 2>&1 &
+
+          sleep 3
+
+      - name: Start Audio
+        run: |
+          pulseaudio --start --exit-idle-time=-1
+          sleep 2
+
+          pactl load-module module-null-sink \
+            sink_name=stream_sink \
+            sink_properties=device.description=StreamSink
+
+          pactl set-default-sink stream_sink
+
+          echo "===== AUDIO SINKS ====="
+          pactl list short sinks
+
+          echo "===== AUDIO SOURCES ====="
+          pactl list short sources
+
+      - name: Start Background Music
+        env:
+          PULSE_SINK: stream_sink
+        run: |
+          ffmpeg \
+            -hide_banner \
+            -loglevel warning \
+            -stream_loop -1 \
+            -i bgm.mp3 \
+            -filter:a "volume=0.20" \
+            -ar 44100 \
+            -ac 2 \
+            -f pulse \
+            stream_sink \
+            >/tmp/bgm.log 2>&1 &
+
+          sleep 2
+          echo "BACKGROUND MUSIC STARTED"
+
+      - name: Verify Piper Voice
+        run: |
+          echo "Welcome to Racing Live! Get ready for an exciting race!" | \
+            piper \
+              --model en_US-amy-medium \
+              --output_file /tmp/luna-test.wav
+
+          ls -lh /tmp/luna-test.wav
+
+
+      - name: Start Marble Server
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+          PULSE_SINK: stream_sink
+        run: |
+          node server.js >/tmp/server.log 2>&1 &
+          sleep 5
+          curl -I http://127.0.0.1:3000/index.html
+
+      - name: Start Chromium
+        env:
+          DISPLAY: :99
+        run: |
+          chromium-browser \
+            --no-sandbox \
+            --disable-dev-shm-usage \
+            --disable-gpu \
+            --no-first-run \
+            --no-default-browser-check \
+            --disable-features=UseDBus \
+            --disable-translate \
+            --disable-extensions \
+            --window-size=1280,720 \
+            --window-position=0,0 \
+            --kiosk \
+            http://127.0.0.1:3000/index.html \
+            >/tmp/chromium.log 2>&1 &
+
+          sleep 8
+
+      - name: Verify Display
+        env:
+          DISPLAY: :99
+        run: |
+          ffmpeg \
+            -hide_banner \
+            -loglevel error \
+            -f x11grab \
+            -video_size 1280x720 \
+            -framerate 30 \
+            -i :99.0 \
+            -frames:v 1 \
+            -y /tmp/frame.png
+
+          test -s /tmp/frame.png
+          echo "DISPLAY OK"
+
+      - name: Stream to YouTube
+        env:
+          DISPLAY: :99
+          STREAM_KEY: ${{ secrets.YOUTUBE_STREAM_KEY }}
+        run: |
+          test -n "$STREAM_KEY"
+
+          ffmpeg \
+            -hide_banner \
+            -loglevel info \
+            -f x11grab \
+            -video_size 1280x720 \
+            -framerate 30 \
+            -draw_mouse 0 \
+            -i :99.0 \
+            -f pulse \
+            -i stream_sink.monitor \
+            -c:v libx264 \
+            -preset ultrafast \
+            -tune zerolatency \
+            -pix_fmt yuv420p \
+            -r 30 \
+            -g 60 \
+            -keyint_min 60 \
+            -sc_threshold 0 \
+            -b:v 2500k \
+            -minrate 2500k \
+            -maxrate 2500k \
+            -bufsize 5000k \
+            -c:a aac \
+            -b:a 128k \
+            -ar 44100 \
+            -ac 2 \
+            -t 3600 \
+            -f flv \
+            "rtmp://a.rtmp.youtube.com/live2/${STREAM_KEY}"
+
+      - name: Debug Logs
+        if: always()
+        run: |
+          echo "===== SERVER ====="
+          tail -100 /tmp/server.log || true
+
+          echo "===== AUDIO ====="
+          tail -100 /tmp/audio.log || true
+
+          echo "===== CHROMIUM ====="
+          tail -100 /tmp/chromium.log || true
+
+          echo "===== XVFB ====="
+          tail -100 /tmp/xvfb.log || true

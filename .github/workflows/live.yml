@@ -43,7 +43,7 @@ jobs:
       - name: Start Xvfb
         run: |
           Xvfb :99 \
-            -screen 0 1280x720x24 \
+            -screen 0 720x1280x24 \
             -ac \
             +extension GLX \
             +render \
@@ -123,7 +123,7 @@ jobs:
             --disable-features=UseDBus \
             --disable-translate \
             --disable-extensions \
-            --window-size=1280,720 \
+            --window-size=720,1280 \
             --window-position=0,0 \
             --kiosk \
             http://127.0.0.1:3000/index.html \
@@ -139,7 +139,7 @@ jobs:
             -hide_banner \
             -loglevel error \
             -f x11grab \
-            -video_size 1280x720 \
+            -video_size 720x1280 \
             -framerate 30 \
             -i :99.0 \
             -frames:v 1 \
@@ -159,7 +159,7 @@ jobs:
             -hide_banner \
             -loglevel info \
             -f x11grab \
-            -video_size 1280x720 \
+            -video_size 720x1280 \
             -framerate 30 \
             -draw_mouse 0 \
             -i :99.0 \

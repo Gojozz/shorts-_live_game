@@ -120,7 +120,7 @@ jobs:
             --disable-gpu \
             --no-first-run \
             --no-default-browser-check \
-            --disable-features=UseDBus \
+            --disable-features=UseDBus,Translate,TranslateUI \
             --disable-translate \
             --disable-extensions \
             --window-size=720,1280 \

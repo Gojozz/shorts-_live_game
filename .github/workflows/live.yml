@@ -36,7 +36,7 @@ jobs:
             espeak-ng
 
           python3 -m pip install --break-system-packages piper-tts
-          python3 -m piper.download_voices en_US-amy-medium
+          python3 -m piper.download_voices id_ID-news_tts-medium
 
           npm install
 
@@ -92,7 +92,7 @@ jobs:
         run: |
           echo "Welcome to Racing Live! Get ready for an exciting race!" | \
             piper \
-              --model en_US-amy-medium \
+              --model id_ID-news_tts-medium \
               --output_file /tmp/luna-test.wav
 
           ls -lh /tmp/luna-test.wav

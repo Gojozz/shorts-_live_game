@@ -130,7 +130,7 @@ function addViewerToQueue(name) {
   });
 
   io.emit("aiResponse", {
-    speechText: `${name} joined the next race! Good luck!`
+    speechText: `${name} masuk ke balapan berikutnya! Semoga beruntung!`
   });
 
   return true;
@@ -141,12 +141,12 @@ function addViewerToQueue(name) {
 ========================================================= */
 
 const fallbackComments = [
-  "The race is heating up!",
-  "Look at that speed!",
-  "Anything can happen now!",
-  "The finish line is getting closer!",
-  "What an incredible battle!",
-  "Someone is making a huge comeback!"
+  "Balapannya makin seru!",
+  "Lihat kecepatannya!",
+  "Apa pun bisa terjadi sekarang!",
+  "Garis finis semakin dekat!",
+  "Pertarungan yang luar biasa!",
+  "Ada yang melakukan comeback besar!"
 ];
 
 function fallbackComment() {
@@ -168,7 +168,7 @@ async function lunaComment(event, force = false) {
       messages: [
         {
           role: "system",
-          content: "You are Luna, an energetic and friendly live Racing host. Always respond in natural English. One short sentence only. Maximum 14 words. Family friendly. Exciting. Never mention AI."
+          content: "You are Luna, an energetic and friendly live Racing host. Always respond in natural Indonesian. One short sentence only. Maximum 14 words. Family friendly. Exciting. Never mention AI."
         },
         { role: "user", content: event }
       ],
@@ -213,7 +213,7 @@ function speakLuna(text) {
       const piper = spawn(
         "piper",
         [
-          "--model", "en_US-amy-medium",
+          "--model", "id_ID-news_tts-medium",
           "--output_file", wavFile
         ],
         {
@@ -581,7 +581,7 @@ io.on("connection", socket => {
     waiting: waitingPlayers.map(p => p.name)
   });
   socket.emit("aiResponse", {
-    speechText: "Welcome to Racing Live! Type JOIN in chat to race!"
+    speechText: "Selamat datang di Racing Live! Ketik JOIN di chat untuk ikut balapan!"
   });
 });
 

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Racing Shorts Live</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="game">
+
+    <!-- BACKGROUND ASLI -->
+    <img class="game-background" src="/assets/background/game-bg.png" alt="Game Background">
+
+    <!-- =========================
+         RANKING
+    ========================== -->
+    <div class="ranking-panel">
+        <div class="ranking-title">🏆 RANKING</div>
+
+        <div class="rank-row" id="rank1">
+            <span class="rank-number">1</span>
+            <span class="color-dot car-color-1"></span>
+            <span class="rank-name">Alex</span>
+        </div>
+
+        <div class="rank-row" id="rank2">
+            <span class="rank-number">2</span>
+            <span class="color-dot car-color-2"></span>
+            <span class="rank-name">Liam</span>
+        </div>
+
+        <div class="rank-row" id="rank3">
+            <span class="rank-number">3</span>
+            <span class="color-dot car-color-3"></span>
+            <span class="rank-name">Emma</span>
+        </div>
+
+        <div class="rank-row" id="rank4">
+            <span class="rank-number">4</span>
+            <span class="color-dot car-color-4"></span>
+            <span class="rank-name">Noah</span>
+        </div>
+
+        <div class="rank-row" id="rank5">
+            <span class="rank-number">5</span>
+            <span class="color-dot car-color-5"></span>
+            <span class="rank-name">Mia</span>
+        </div>
+    </div>
+
+    <!-- =========================
+         NEXT RACERS
+    ========================== -->
+    <div class="next-panel">
+        <div id="nextRacers">
+            
+        </div>
+    </div>
+
+    <!-- =========================
+         RACE AREA
+    ========================== -->
+    <div id="raceArea">
+
+        <div id="countdown">
+            <span id="countdownText"></span>
+        </div>
+
+        <div class="car car1" id="m1">
+            <img src="/assets/cars/car1.png" alt="Car 1">
+        </div>
+
+        <div class="car car2" id="m2">
+            <img src="/assets/cars/car2.png" alt="Car 2">
+        </div>
+
+        <div class="car car3" id="m3">
+            <img src="/assets/cars/car3.png" alt="Car 3">
+        </div>
+
+        <div class="car car4" id="m4">
+            <img src="/assets/cars/car4.png" alt="Car 4">
+        </div>
+
+        <div class="car car5" id="m5">
+            <img src="/assets/cars/car5.png" alt="Car 5">
+        </div>
+
+    </div>
+
+    <!-- =========================
+         WINNER
+    ========================== -->
+    <div id="winnerPopup">
+        <div class="winner-label">🏆 PEMENANG</div>
+        <div id="winnerName">---</div>
+    </div>
+
+    <!-- GO OVERLAY -->
+    <div id="goOverlay">
+        <div id="goText">GO!</div>
+    </div>
+
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="game.js"></script>
+
+</body>
+</html>

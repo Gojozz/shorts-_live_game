@@ -1,0 +1,472 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* =========================================
+   GAME CANVAS
+========================================= */
+
+#game {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    max-width: 720px;
+    max-height: 1280px;
+    aspect-ratio: 9 / 16;
+    overflow: hidden;
+    background: #000;
+}
+
+/* Background asli milik game */
+
+.game-background {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* =========================================
+   RACE AREA
+========================================= */
+
+#raceArea {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    overflow: hidden;
+}
+
+/*
+   Area mobil.
+   Koordinat menggunakan persentase supaya
+   tetap cocok ketika ukuran video berubah.
+*/
+
+.car {
+    position: absolute;
+    width: 13%;
+    max-width: 94px;
+    min-width: 58px;
+    aspect-ratio: 1 / 1;
+    z-index: 20;
+    pointer-events: none;
+    transform-origin: center center;
+    will-change: left, top, transform;
+}
+
+.car img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* =========================================
+   START POSITIONS
+   Tidak dibuat satu garis.
+========================================= */
+
+#m1 {
+    left: 43%;
+    top: 18%;
+}
+
+#m2 {
+    left: 55%;
+    top: 23%;
+}
+
+#m3 {
+    left: 43%;
+    top: 29%;
+}
+
+#m4 {
+    left: 55%;
+    top: 34%;
+}
+
+#m5 {
+    left: 43%;
+    top: 40%;
+}
+
+/* =========================================
+   RANKING
+========================================= */
+
+.ranking-panel {
+    position: absolute;
+    top: 8%;
+    left: 4%;
+    width: 36%;
+    min-width: 190px;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    z-index: 50;
+}
+
+.ranking-title,
+.next-title {
+    color: #fff;
+    font-size: clamp(12px, 2vw, 18px);
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 7px;
+    letter-spacing: 1px;
+}
+
+.rank-row {
+    display: flex;
+    align-items: center;
+    height: 34px;
+    margin: 3px 0;
+    padding: 0 7px;
+    border-radius: 7px;
+    background: transparent;
+    color: #fff;
+    font-size: clamp(10px, 1.7vw, 15px);
+    font-weight: 800;
+}
+
+.rank-number {
+    width: 20px;
+    text-align: center;
+}
+
+.color-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    margin: 0 7px;
+    flex-shrink: 0;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+.car-color-1 {
+    background: #ff1744;
+}
+
+.car-color-2 {
+    background: #00d9ff;
+}
+
+.car-color-3 {
+    background: #ffd166;
+}
+
+.car-color-4 {
+    background: #20c878;
+}
+
+.car-color-5 {
+    background: #a855f7;
+}
+
+.rank-name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* =========================================
+   NEXT RACERS
+========================================= */
+
+.next-panel {
+    position: absolute;
+    left: -15px;
+    bottom: 35%;
+    width: 42%;
+    min-width: 210px;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    border: none;
+    color: #fff;
+    z-index: 50;
+    box-shadow: none;
+}
+
+#nextRacers {
+    min-height: 30px;
+    text-align: center;
+    font-size: 30px !important;
+    font-weight: 700;
+}
+
+/* =========================================
+   COUNTDOWN
+========================================= */
+
+#countdown {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    pointer-events: none;
+}
+
+#countdownText {
+    font-size: clamp(70px, 16vw, 150px);
+    font-weight: 1000;
+    color: #fff;
+    text-shadow:
+        0 0 10px #000,
+        0 0 25px rgba(255, 255, 255, 0.8),
+        0 8px 20px rgba(0, 0, 0, 0.7);
+    transform: scale(0);
+    opacity: 0;
+}
+
+#countdownText.show {
+    animation: countdownPop 0.75s ease-out forwards;
+}
+
+@keyframes countdownPop {
+    0% {
+        transform: scale(0.2);
+        opacity: 0;
+    }
+
+    35% {
+        transform: scale(1.25);
+        opacity: 1;
+    }
+
+    70% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1.05);
+        opacity: 0;
+    }
+}
+
+/* =========================================
+   GO!
+========================================= */
+
+#goOverlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 110;
+    pointer-events: none;
+    opacity: 0;
+}
+
+#goText {
+    font-size: clamp(80px, 19vw, 180px);
+    font-weight: 1000;
+    color: #fff;
+    text-shadow:
+        0 0 12px #00ff88,
+        0 0 35px #00ff88,
+        0 8px 25px rgba(0, 0, 0, 0.8);
+}
+
+#goOverlay.show {
+    animation: goEffect 1.1s ease-out forwards;
+}
+
+@keyframes goEffect {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+
+    25% {
+        opacity: 1;
+        transform: scale(1.25);
+    }
+
+    45% {
+        transform: scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(1.4);
+    }
+}
+
+/* =========================================
+   WINNER
+========================================= */
+
+#winnerPopup {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.7);
+    min-width: 240px;
+    padding: 18px 25px;
+    text-align: center;
+    border-radius: 18px;
+    background: rgba(0, 0, 0, 0.88);
+    border: 3px solid #ffd166;
+    box-shadow: 0 0 35px rgba(255, 209, 102, 0.5);
+    color: #fff;
+    z-index: 120;
+    opacity: 0;
+    pointer-events: none;
+}
+
+#winnerPopup.show {
+    animation: winnerShow 0.6s ease-out forwards;
+}
+
+.winner-label {
+    font-size: 14px;
+    font-weight: 900;
+    margin-bottom: 6px;
+    color: #ffd166;
+}
+
+#winnerName {
+    font-size: 28px;
+    font-weight: 1000;
+}
+
+@keyframes winnerShow {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.6);
+    }
+
+    70% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.08);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* =========================================
+   PORTRAIT SCREEN
+========================================= */
+
+@media (max-aspect-ratio: 9 / 16) {
+    #game {
+        width: 100vw;
+        height: 100vh;
+    }
+}
+
+@media (min-aspect-ratio: 9 / 16) {
+    #game {
+        height: 100vh;
+        width: calc(100vh * 9 / 16);
+    }
+}
+
+/* ===== RANKING BACKGROUND CLEANUP ===== */
+
+/* Jangan tampilkan judul Ranking dari HTML */
+.ranking-title {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Jangan tampilkan nomor ranking dari HTML */
+.ranking-panel .rank-number {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Hilangkan tampilan kotak/baris tambahan */
+.ranking-panel .rank-row {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Posisi nama pembalap di dalam panel Ranking background */
+.ranking-panel .rank-row {
+    transform: translateY(20px);
+}
+
+/* Posisi nama pembalap di dalam panel Ranking background */
+.ranking-panel .rank-row {
+    transform: translateY(80px);
+}
+
+/* Posisi nama pembalap di dalam panel Ranking background */
+.ranking-panel .rank-row {
+    transform: translateY(300px);
+}
+
+/* Nama pembalap dibuat 2x lebih besar */
+.ranking-panel .rank-name {
+    font-size: 30px !important;
+    font-weight: 900;
+}
+
+/* Penyesuaian akhir posisi nama Ranking */
+.ranking-panel .rank-row {
+    margin-left: 12px;
+    margin-right: 0;
+    height: 44px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 0 8px;
+}
+
+.ranking-panel .rank-name {
+    font-size: clamp(18px, 3.4vw, 30px);
+    font-weight: 900;
+}
+
+/* Fine tuning nama Ranking */
+.ranking-panel .rank-row {
+    transform: translate(15px, 20px);
+    margin: 18px 0;
+}
+
+.ranking-panel .rank-name {
+    font-size: 2em;
+}
+
+/* Posisi nama pembalap di dalam panel Ranking background */
+.ranking-panel .rank-row {
+    transform: translate(28px, 235px);
+}
+
+/* Hide Next Racers title only */
+.next-title {
+    display: none !important;
+}

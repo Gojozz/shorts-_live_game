@@ -471,194 +471,262 @@ body {
     display: none !important;
 }
 
+
 /* =========================================
-   ROAD MARKINGS (SCROLLING)
+   TEST ROAD MARK
 ========================================= */
 
-/* Tutup marka putih statis di background */
-#staticMarkingsCover {
+#roadMarks {
     position: absolute;
-    left: 48.2%;
-    top: 11%;
-    width: 3.8%;
-    height: 79%;
-    background: #111111;
-    z-index: 9;
+    inset: 0;
+    z-index: 10;
     pointer-events: none;
 }
 
-/* Marka yang bergerak (scroll ke atas) */
-#roadMarkings {
+.road-mark-test {
     position: absolute;
-    left: 48.5%;
-    top: 11%;
-    width: 3.2%;
-    height: 79%;
+    left: 68%;
+    top: 65%;
+    width: 2%;
+    height: 5%;
+    background: white;
+    border-radius: 3px;
+}
+
+
+/* =========================================
+   MOVING ROAD MARKS
+========================================= */
+
+#roadMarks {
+    position: absolute;
+    inset: 0;
     z-index: 10;
     pointer-events: none;
     overflow: hidden;
-
-    background-image: repeating-linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0.95) 0px,
-        rgba(255, 255, 255, 0.95) 16px,
-        transparent 16px,
-        transparent 40px
-    );
-    background-size: 100% 56px;
-    background-position-y: 0;
-    opacity: 0.95;
-    will-change: background-position;
 }
 
-/* Animasi scroll ke atas */
-#roadMarkings.scrolling {
-    animation: roadScrollUp 0.42s linear infinite;
+.road-mark {
+    position: absolute;
+    left: 68%;
+    transform: translateX(-50%);
+    background: rgba(255,255,255,0.96);
+    border-radius: 3px;
+    box-shadow: 0 0 4px rgba(255,255,255,0.35);
+
+    animation: roadMarkMove 2.4s linear infinite;
 }
 
-@keyframes roadScrollUp {
-    from {
-        background-position-y: 0;
+/* Perspektif trek:
+   marka semakin besar ketika mendekati bawah */
+.mark1 { top: 18%; width: 1.0%; height: 2.0%; animation-delay: -2.0s; }
+.mark2 { top: 30%; width: 1.2%; height: 2.5%; animation-delay: -1.6s; }
+.mark3 { top: 42%; width: 1.5%; height: 3.0%; animation-delay: -1.2s; }
+.mark4 { top: 54%; width: 1.8%; height: 3.7%; animation-delay: -0.8s; }
+.mark5 { top: 66%; width: 2.0%; height: 4.5%; animation-delay: -0.4s; }
+.mark6 { top: 78%; width: 2.3%; height: 5.2%; animation-delay: 0s; }
+
+@keyframes roadMarkMove {
+    0% {
+        top: 12%;
+        opacity: 0;
     }
-    to {
-        background-position-y: -56px;
+
+    8% {
+        opacity: 1;
     }
-}
 
-/* ===== ADJUST MARKA (lebih ke kanan + lebih tipis) ===== */
-#staticMarkingsCover {
-    left: 49.3% !important;
-    width: 2.6% !important;
-}
-
-#roadMarkings {
-    left: 49.5% !important;
-    width: 2.2% !important;
-
-    background-image: repeating-linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0.95) 0px,
-        rgba(255, 255, 255, 0.95) 12px,
-        transparent 12px,
-        transparent 36px
-    ) !important;
-    background-size: 100% 48px !important;
-}
-
-@keyframes roadScrollUp {
-    from {
-        background-position-y: 0;
-    }
-    to {
-        background-position-y: -48px;
+    100% {
+        top: 91%;
+        opacity: 1;
     }
 }
 
-/* ===== ADJUST MARKA FINAL ===== */
-#staticMarkingsCover {
-    left: 50.8% !important;
-    width: 2.4% !important;
+
+/* =========================================
+   FINAL ROAD MARK MOTION
+   BAWAH -> ATAS
+========================================= */
+
+/* Matikan track-scroll percobaan lama */
+#scrollingTrack {
+    display: none !important;
 }
 
-#roadMarkings {
-    left: 51.0% !important;
-    width: 2.0% !important;
-
-    background-image: repeating-linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0.95) 0px,
-        rgba(255, 255, 255, 0.95) 11px,
-        transparent 11px,
-        transparent 34px
-    ) !important;
-    background-size: 100% 45px !important;
+/* Container marka */
+#roadMarks {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+    overflow: hidden;
 }
 
-/* Lebih kencang */
-#roadMarkings.scrolling {
-    animation: roadScrollUp 0.28s linear infinite !important;
+/* SEMUA MARKA UKURAN SAMA */
+#roadMarks .road-mark {
+    position: absolute;
+
+    left: 68%;
+
+    width: 2%;
+    height: 4%;
+
+    background: rgba(255,255,255,0.96);
+
+    border-radius: 3px;
+
+    transform: translateX(-50%);
+
+    box-shadow:
+        0 0 4px rgba(255,255,255,0.35);
+
+    opacity: 0;
+
+    animation-name: roadMarkUp;
+    animation-duration: 1.8s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
 }
 
-@keyframes roadScrollUp {
-    from {
-        background-position-y: 0;
+/* Posisi awal masing-masing marka.
+   Semuanya bergerak dengan ukuran TETAP. */
+
+#roadMarks .mark1 {
+    animation-delay: 0s;
+}
+
+#roadMarks .mark2 {
+    animation-delay: -0.26s;
+}
+
+#roadMarks .mark3 {
+    animation-delay: -0.52s;
+}
+
+#roadMarks .mark4 {
+    animation-delay: -0.78s;
+}
+
+#roadMarks .mark5 {
+    animation-delay: -1.04s;
+}
+
+#roadMarks .mark6 {
+    animation-delay: -1.30s;
+}
+
+#roadMarks .mark7 {
+    animation-delay: -1.56s;
+}
+
+/* BAWAH -> ATAS */
+@keyframes roadMarkUp {
+
+    0% {
+        top: 94%;
+        opacity: 0;
     }
-    to {
-        background-position-y: -45px;
+
+    6% {
+        opacity: 1;
+    }
+
+    94% {
+        opacity: 1;
+    }
+
+    100% {
+        top: 8%;
+        opacity: 0;
     }
 }
 
-/* ===== GESER MARKA LEBIH JAUH KE KANAN ===== */
-#staticMarkingsCover {
-    left: 54.5% !important;
-    width: 2.3% !important;
+
+/* =========================================
+   ROAD MARK - SINGLE SYSTEM ONLY
+========================================= */
+
+/* Pastikan track-scroll lama mati */
+#scrollingTrack,
+.road-mark-test {
+    display: none !important;
 }
 
-#roadMarkings {
-    left: 54.8% !important;
-    width: 1.9% !important;
+/* Satu-satunya layer marka */
+#roadMarks {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 10;
 }
 
-/* ===== GESER MARKA JAUH KE KANAN + LEBIH KENCANG ===== */
-#staticMarkingsCover {
-    left: 66.5% !important;
-    width: 2.2% !important;
+/* Semua marka identik */
+#roadMarks .road-mark {
+    position: absolute;
+
+    left: 68%;
+    top: 100%;
+
+    width: 2%;
+    height: 4%;
+
+    background: rgba(255,255,255,0.96);
+    border-radius: 3px;
+
+    transform: translateX(-50%);
+
+    opacity: 0;
+
+    animation: FINAL_ROAD_MARK_UP 2.2s linear infinite;
 }
 
-#roadMarkings {
-    left: 66.8% !important;
-    width: 1.8% !important;
-
-    background-image: repeating-linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0.95) 0px,
-        rgba(255, 255, 255, 0.95) 10px,
-        transparent 10px,
-        transparent 32px
-    ) !important;
-    background-size: 100% 42px !important;
+/* Jarak antar marka */
+#roadMarks .road-mark:nth-child(1) {
+    animation-delay: 0s;
 }
 
-/* Kecepatan lebih kencang */
-#roadMarkings.scrolling {
-    animation: roadScrollUp 0.20s linear infinite !important;
+#roadMarks .road-mark:nth-child(2) {
+    animation-delay: -0.31s;
 }
 
-@keyframes roadScrollUp {
-    from {
-        background-position-y: 0;
+#roadMarks .road-mark:nth-child(3) {
+    animation-delay: -0.62s;
+}
+
+#roadMarks .road-mark:nth-child(4) {
+    animation-delay: -0.93s;
+}
+
+#roadMarks .road-mark:nth-child(5) {
+    animation-delay: -1.24s;
+}
+
+#roadMarks .road-mark:nth-child(6) {
+    animation-delay: -1.55s;
+}
+
+#roadMarks .road-mark:nth-child(7) {
+    animation-delay: -1.86s;
+}
+
+/* WAJIB: BAWAH -> ATAS */
+@keyframes FINAL_ROAD_MARK_UP {
+    0% {
+        top: 100%;
+        opacity: 0;
     }
-    to {
-        background-position-y: -42px;
+
+    8% {
+        opacity: 1;
     }
-}
 
-/* ===== FINAL ADJUST MARKA ===== */
-#staticMarkingsCover {
-    left: 67.6% !important;
-    top: 16% !important;
-    width: 2.1% !important;
-    height: 73% !important;
-}
+    92% {
+        opacity: 1;
+    }
 
-#roadMarkings {
-    left: 67.9% !important;
-    top: 16% !important;
-    width: 1.7% !important;
-    height: 73% !important;
-}
-
-/* ===== ADJUST POSISI FINAL ===== */
-#staticMarkingsCover {
-    left: 67.1% !important;
-    top: 19.5% !important;
-    width: 2.1% !important;
-    height: 68% !important;
-}
-
-#roadMarkings {
-    left: 67.4% !important;
-    top: 19.5% !important;
-    width: 1.7% !important;
-    height: 68% !important;
+    100% {
+        top: 5%;
+        opacity: 0;
+    }
 }

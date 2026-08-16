@@ -12,7 +12,7 @@
 <div id="game">
 
     <!-- BACKGROUND ASLI -->
-    <img class="game-background" src="/assets/background/game-bg.png" alt="Game Background">
+    <img class="game-background" src="/assets/background/game-bg-clean.png" alt="Game Background">
 
     <!-- =========================
          RANKING
@@ -68,12 +68,6 @@
         <div id="countdown">
             <span id="countdownText"></span>
         </div>
-
-        <!-- Tutup marka statis -->
-        <div id="staticMarkingsCover"></div>
-
-        <!-- Marka bergerak -->
-        <div id="roadMarkings"></div>
 
         <div class="car car1" id="m1">
             <img src="/assets/cars/car1.png" alt="Car 1">
